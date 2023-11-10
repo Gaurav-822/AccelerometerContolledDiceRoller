@@ -1,8 +1,15 @@
 import 'dart:math';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/services.dart';
+import 'package:shake/shake.dart';
 
 void main() {
+  // To make the app potrait only!
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   runApp(const MyApp());
 }
 
@@ -31,36 +38,56 @@ class MyHomePage extends StatefulWidget {
 
 class MyHomeState extends State<MyHomePage> {
   var count = Random().nextInt(6) + 1;
+  double animate = 0;
+
+  void music() async {
+    await AssetsAudioPlayer.newPlayer().open(
+      Audio("assets/audio/onedice.mp3"),
+      autoStart: true,
+    );
+  }
+
+  void roll() {
+    music();
+    count = Random().nextInt(6) + 1;
+    setState(() {
+      animate == 1 ? animate = 0 : animate = 1;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    ShakeDetector.autoStart(onPhoneShake: () {
+      roll();
+    });
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(255, 251, 142, 1),
       appBar: AppBar(
-        title: const Text("Dice Roller"),
+        backgroundColor: const Color.fromRGBO(255, 251, 142, 1),
+        // title: const Text("Dice Roller"),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Text("Count: $count"),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50.0),
-              child: Image.asset(
-                'assets/dice/$count.png',
-                width: 200,
-                height: 200,
-                fit: BoxFit.fill,
-              ),
-            ),
-
-            ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    count = Random().nextInt(6) + 1;
-                  });
-                },
-                child: const Text("ROLL"))
-          ],
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Text("Count: $count"),
+              Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 50.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      roll();
+                    },
+                    child: Image.asset(
+                      'assets/dice/$count.png',
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.fill,
+                    ).animate(target: animate).shake(),
+                  )),
+            ],
+          ),
         ),
       ),
     );
