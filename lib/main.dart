@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:shake/shake.dart';
 
 void main() {
@@ -39,12 +39,12 @@ class MyHomePage extends StatefulWidget {
 class MyHomeState extends State<MyHomePage> {
   var count = Random().nextInt(6) + 1;
   double animate = 0;
+  final player = AudioPlayer();
 
   void music() async {
-    await AssetsAudioPlayer.newPlayer().open(
-      Audio("assets/audio/onedice.mp3"),
-      autoStart: true,
-    );
+    final audioSource = AudioSource.asset('assets/audio/onedice.mp3');
+    await player.setAudioSource(audioSource);
+    await player.play();
   }
 
   void roll() {

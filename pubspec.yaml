@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  just_audio: ^0.9.36
   assets_audio_player: ^3.0.8
   flutter_animate: ^4.2.0+1
   flutter:
