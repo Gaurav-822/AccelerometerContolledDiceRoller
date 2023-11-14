@@ -6,9 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shake/shake.dart';
 
-void main() {
+void main() async {
   // To make the app potrait only!
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(const MyApp());
 }
@@ -64,6 +68,7 @@ class MyHomeState extends State<MyHomePage> {
         roll();
       },
       minimumShakeCount: 1,
+      shakeThresholdGravity: 2.5,
     );
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 251, 142, 1),
