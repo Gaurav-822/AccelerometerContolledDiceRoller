@@ -40,26 +40,36 @@ class MyHomeState extends State<MyHomePage> {
   var count = Random().nextInt(6) + 1;
   double animate = 0;
   final player = AudioPlayer();
+  final audioSource = AudioSource.asset('assets/audio/onedice.mp3');
+  late ShakeDetector detector;
 
   void music() async {
-    final audioSource = AudioSource.asset('assets/audio/onedice.mp3');
     await player.setAudioSource(audioSource);
     await player.play();
   }
 
   void roll() {
-    music();
-    count = Random().nextInt(6) + 1;
     setState(() {
+      music();
+      count = Random().nextInt(6) + 1;
       animate == 1 ? animate = 0 : animate = 1;
+      detector.stopListening();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    ShakeDetector.autoStart(onPhoneShake: () {
-      roll();
-    });
+    detector = ShakeDetector.autoStart(
+      onPhoneShake: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Shake!'),
+          ),
+        );
+        roll();
+      },
+      minimumShakeCount: 1,
+    );
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 251, 142, 1),
       appBar: AppBar(
