@@ -61,11 +61,6 @@ class MyHomeState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     detector = ShakeDetector.autoStart(
       onPhoneShake: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Shake!'),
-          ),
-        );
         roll();
       },
       minimumShakeCount: 1,
